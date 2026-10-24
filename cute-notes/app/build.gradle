@@ -1,0 +1,57 @@
+plugins {
+    id 'com.android.application'
+}
+
+// Release builds are signed with the key in ~/.config/cute-apps (never committed).
+def keyDir = new File(System.getProperty('user.home'), '.config/cute-apps')
+def keystore = new File(System.getenv('CUTE_KEYSTORE') ?: "$keyDir/release.jks")
+def passFile = new File(System.getenv('CUTE_KEYSTORE_PASS_FILE') ?: "$keyDir/release.pass")
+
+android {
+    namespace 'com.vaib215.cutenotes'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId 'com.vaib215.cutenotes'
+        minSdk 26
+        targetSdk 34
+        versionCode 1
+        versionName '1.0'
+        // Phones are ARM; the x86 copies of the recogniser would only serve emulators.
+        ndk { abiFilters 'arm64-v8a', 'armeabi-v7a' }
+    }
+
+    signingConfigs {
+        release {
+            if (keystore.exists() && passFile.exists()) {
+                def pass = passFile.text.trim()
+                storeFile keystore
+                storePassword pass
+                keyAlias 'cute-apps'
+                keyPassword pass
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
+            if (keystore.exists()) signingConfig signingConfigs.release
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+base {
+    archivesName = 'CuteNotes'
+}
+
+dependencies {
+    implementation 'com.google.mlkit:digital-ink-recognition:19.0.0'
+}
