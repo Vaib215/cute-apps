@@ -37,5 +37,34 @@
                 <data android:mimeType="application/epub+zip" />
             </intent-filter>
         </activity>
+
+        <!-- Continue reading, on the home screen. -->
+        <receiver
+            android:name=".ReadingWidget"
+            android:exported="true"
+            android:label="Continue reading">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_reading" />
+        </receiver>
+        <receiver
+            android:name=".Updated"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- The current page, with page turning, on the home screen. -->
+        <receiver
+            android:name=".PageWidget"
+            android:exported="true"
+            android:label="Current page">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_page" />
+        </receiver>
     </application>
 </manifest>

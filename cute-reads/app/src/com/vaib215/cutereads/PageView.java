@@ -127,6 +127,14 @@ public class PageView extends View {
         return pageStarts.length <= 1 ? 100 : Math.round(100f * page / (pageStarts.length - 1));
     }
 
+    /** Where each page starts (char offsets), or null while laying out. */
+    int[] pageOffsets() {
+        if (layout == null) return null;
+        int[] out = new int[pageStarts.length];
+        for (int i = 0; i < out.length; i++) out[i] = layout.getLineStart(pageStarts[i]);
+        return out;
+    }
+
     /** Char range of the current page. */
     int pageStart() { return layout == null ? 0 : layout.getLineStart(pageStarts[page]); }
 

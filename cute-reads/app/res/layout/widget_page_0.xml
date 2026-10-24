@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The page widget (one copy per reading font; widgets can't change fonts from code).
+     The text sizes itself so the reader's whole page fits, whatever the widget's shape. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_page_night"
+    android:orientation="vertical"
+    android:paddingStart="16dp"
+    android:paddingTop="14dp"
+    android:paddingEnd="16dp">
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:autoSizeMaxTextSize="26sp"
+        android:autoSizeMinTextSize="6sp"
+        android:autoSizeStepGranularity="0.5sp"
+        android:autoSizeTextType="uniform"
+        android:breakStrategy="simple"
+        android:fontFamily="@font/literata"
+        android:hyphenationFrequency="none"
+        android:lineSpacingMultiplier="1.25"
+        android:textColor="#FFE6E6E6"
+        android:textSize="18sp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/prev"
+            android:layout_width="48dp"
+            android:layout_height="40dp"
+            android:contentDescription="Previous page"
+            android:scaleType="center"
+            android:src="@drawable/ic_prev" />
+        <TextView
+            android:id="@+id/where"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="#FF8A8A8A"
+            android:textSize="13sp" />
+        <ImageView
+            android:id="@+id/next"
+            android:layout_width="48dp"
+            android:layout_height="40dp"
+            android:contentDescription="Next page"
+            android:scaleType="center"
+            android:src="@drawable/ic_next" />
+    </LinearLayout>
+</LinearLayout>

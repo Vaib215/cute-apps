@@ -81,7 +81,7 @@ final class Library {
     }
 
     static void remove(File book) {
-        for (String ext : new String[]{".txt", ".meta", ".jpg", ".hl", ".toc"}) {
+        for (String ext : new String[]{".txt", ".meta", ".jpg", ".hl", ".toc", ".pages"}) {
             new File(book.getParentFile(), name(book) + ext).delete();
         }
         File images = new File(book.getParentFile(), name(book) + ".files");

@@ -20,13 +20,15 @@ import android.widget.TextView;
 final class Ui {
     static final String[] FONTS = {"Literata", "Charis", "Merriweather", "Atkinson", "System"};
 
+    static final int DAY_FG = 0xFF1E1E1E, NIGHT_FG = 0xFFE6E6E6;
+
     final boolean day;
     final int bg, fg, dim, sheet, line;
 
     private Ui(boolean day, float warmth) {
         this.day = day;
         bg = warm(day ? 0xFFF6F4EF : Color.BLACK, warmth);
-        fg = warm(day ? 0xFF1E1E1E : 0xFFE6E6E6, warmth);
+        fg = warm(day ? DAY_FG : NIGHT_FG, warmth);
         dim = warm(day ? 0xFF8A8580 : 0xFF8A8A8A, warmth);
         sheet = warm(day ? 0xFFFFFFFF : 0xFF1C1C1E, warmth);
         line = warm(day ? 0xFFD8D5CF : 0xFF3A3A3C, warmth);
@@ -43,10 +45,12 @@ final class Ui {
                 Math.round(Color.blue(color) * (1 - 0.5f * w)));
     }
 
+    static final int[] FONT_RES = {R.font.literata, R.font.charis, R.font.merriweather, R.font.atkinson};
+
     static Typeface font(Context c, int i) {
-        if (i < 0 || i >= FONTS.length - 1) return Typeface.DEFAULT;
+        if (i < 0 || i >= FONT_RES.length) return Typeface.DEFAULT;
         try {
-            return Typeface.createFromAsset(c.getAssets(), "fonts/" + FONTS[i].toLowerCase() + ".ttf");
+            return c.getResources().getFont(FONT_RES[i]);
         } catch (Exception e) {
             return Typeface.DEFAULT;
         }

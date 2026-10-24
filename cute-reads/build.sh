@@ -6,19 +6,21 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-VERSION_CODE=1
-VERSION_NAME=1.0
+VERSION_CODE=2
+VERSION_NAME=1.1
 
 SDK=${ANDROID_HOME:-$HOME/Library/Android/sdk}
 BT=$(ls -d "$SDK"/build-tools/* | sort -V | tail -1)
 JAR=$(ls -d "$SDK"/platforms/android-* | sort -V | tail -1)/android.jar
 B=build
 
-rm -rf $B && mkdir -p $B/classes $B/gen $B/assets/fonts
-cp fonts/*.ttf $B/assets/fonts/ && cp -r fonts/licenses $B/assets/fonts/
+rm -rf $B && mkdir -p $B/classes $B/gen $B/assets/fonts $B/fontres/font
+# Fonts are resources (so home-screen widgets can use them too); their licences ride along as assets.
+cp fonts/*.ttf $B/fontres/font/ && cp -r fonts/licenses $B/assets/fonts/
 
 "$BT"/aapt2 compile --dir app/res -o $B/res.zip
-"$BT"/aapt2 link -o $B/base.apk -I "$JAR" --manifest app/AndroidManifest.xml $B/res.zip \
+"$BT"/aapt2 compile --dir $B/fontres -o $B/fonts.zip
+"$BT"/aapt2 link -o $B/base.apk -I "$JAR" --manifest app/AndroidManifest.xml $B/res.zip $B/fonts.zip \
   -A $B/assets --java $B/gen --min-sdk-version 26 --target-sdk-version 30 \
   --version-code $VERSION_CODE --version-name $VERSION_NAME
 if ! javac -nowarn -Xlint:-options -source 8 -target 8 -classpath "$JAR" -d $B/classes \

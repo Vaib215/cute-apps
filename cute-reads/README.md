@@ -48,10 +48,25 @@
 - Add EPUB and TXT books from your files, or with "Open with Cute Reads" from a file manager.
 - DRM-protected books are recognised and explained (they can't be opened).
 
+**Home-screen widgets**
+- **Continue reading:** your book's cover, title and progress; tap to carry on.
+- **Current page:** the page you're on, in your reading font and colours, with ‹ › to turn pages. Turning here moves your place, so the app opens where the widget is. The text fits whatever size you make it.
+- Both resize freely, and can sit on a card, on black, or straight on the wallpaper (reading options › widgets).
+
+<p>
+  <img src="docs/widget_reading.png" width="150" alt="Continue reading widget">
+  <img src="docs/widget_page.png" width="230" alt="Current page widget">
+</p>
+
 **Quiet**
 - Optional Do Not Disturb while a book is open; alarms still ring.
 - Screen timer: keep the screen on for as long as you read, or let it sleep after 2–30 minutes.
 - Works offline. No ads, no tracking, no accounts, no internet permission.
+
+## What's new in 1.1
+
+- Home-screen widgets: Continue reading and Current page.
+- Reading fonts now ship as app resources (so widgets can use them).
 
 ## Install
 

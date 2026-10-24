@@ -148,6 +148,7 @@ public class LibraryActivity extends Activity {
                     Library.remove(book);
                     prefs.edit().remove("pos:" + book.getName()).remove("pct:" + book.getName())
                             .remove("opened:" + book.getName()).apply();
+                    ReadingWidget.update(this);
                     covers.remove(book.getName());
                     refresh();
                 })
