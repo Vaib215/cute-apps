@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A crescent moon, two small stars and the family's heart. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <group android:translateX="27" android:translateY="30" android:scaleX="2.1" android:scaleY="2.1">
+        <path android:fillColor="#FF000000" android:pathData="M12.34,2.02C6.59,1.82 2,6.42 2,12c0,5.52 4.48,10 10,10c3.71,0 6.93,-2.02 8.66,-5.02C13.15,16.73 8.57,8.55 12.34,2.02z" />
+    </group>
+    <group android:translateX="-4" android:translateY="16">
+        <path android:fillColor="#FF000000" android:pathData="M70,31 C70,31 62.5,26.2 62.5,22 C62.5,19.7 64.3,17.9 66.6,17.9 C68.1,17.9 69.4,18.7 70,19.9 C70.6,18.7 71.9,17.9 73.4,17.9 C75.7,17.9 77.5,19.7 77.5,22 C77.5,26.2 70,31 70,31 Z" />
+    </group>
+    <group android:translateX="70" android:translateY="58" android:scaleX="0.9" android:scaleY="0.9">
+        <path android:fillColor="#FF000000" android:pathData="M0,-4 L1,-1 L4,0 L1,1 L0,4 L-1,1 L-4,0 L-1,-1 Z" />
+    </group>
+    <group android:translateX="77" android:translateY="47" android:scaleX="0.6" android:scaleY="0.6">
+        <path android:fillColor="#FF000000" android:pathData="M0,-4 L1,-1 L4,0 L1,1 L0,4 L-1,1 L-4,0 L-1,-1 Z" />
+    </group>
+</vector>

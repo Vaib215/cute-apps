@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Drawn like the bedside clock's analog face (Face.drawAnalog). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="400dp" android:height="400dp"
+    android:viewportWidth="200" android:viewportHeight="200">
+    <path android:strokeColor="#FFFFE3D3" android:strokeWidth="4.28" android:strokeLineCap="round" android:pathData="M100,105.76 L100,52.00" />
+</vector>
