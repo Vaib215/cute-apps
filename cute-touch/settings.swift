@@ -29,6 +29,7 @@ final class SettingsWindowController {
 struct SettingsView: View {
     @ObservedObject var model: AppModel
     @State private var confirmReset = false
+    @State private var loginOn = LoginItem.isEnabled || LoginItem.needsApproval
 
     var body: some View {
         Form {
@@ -100,6 +101,19 @@ struct SettingsView: View {
                 Text("Timing")
             } footer: {
                 Text("Shorter tap and double-click windows make single taps/clicks fire sooner when a double action is set, but need quicker double taps.")
+            }
+
+            Section {
+                Toggle("Open at login", isOn: Binding(
+                    get: { loginOn },
+                    set: { LoginItem.set($0); loginOn = LoginItem.isEnabled || LoginItem.needsApproval }))
+                if LoginItem.needsApproval {
+                    HStack {
+                        Text("Allow Cute Touch in Login Items").foregroundStyle(.orange)
+                        Spacer()
+                        Button("Open Login Items…") { LoginItem.openSystemSettings() }
+                    }
+                }
             }
 
             Section("Notch panel") {

@@ -604,6 +604,7 @@ final class CuteTouchApp: NSObject, NSApplicationDelegate {
         let me = ProcessInfo.processInfo.processIdentifier
         let wantsSettings = CommandLine.arguments.contains("--settings")
         if NSRunningApplication.runningApplications(withBundleIdentifier: "com.vaib215.cutetouch").contains(where: { $0.processIdentifier != me }) {
+            if CommandLine.arguments.contains("--background") { exit(0) }   // login agent started a duplicate
             DistributedNotificationCenter.default().postNotificationName(
                 .init(wantsSettings ? "com.vaib215.cutetouch.settings" : "com.vaib215.cutetouch.show"), object: nil, deliverImmediately: true)
             exit(0)
@@ -716,6 +717,7 @@ final class CuteTouchApp: NSObject, NSApplicationDelegate {
             self.sensor.start()
         }
 
+        LoginItem.enableOnFirstRun()
         if wantsSettings { settings.show() } else if !CommandLine.arguments.contains("--background") { model.setExpanded(true) }
     }
 

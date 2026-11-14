@@ -12,7 +12,7 @@ Small, focused, open-source apps. No ads, no accounts, nothing collected by us.
 | <img src="cute-touch/docs/icon.png" width="56" alt="Cute Touch icon"> | [**Cute Touch**](cute-touch/) | macOS 26+ (MacBook) | Tap the bezel of a non-touch MacBook: taps on the light sensor become gestures, a menu-bar pet shows where, and a panel holds your apps with live window previews. |
 
 - **Android:** download APKs from [Releases](https://github.com/Vaib215/cute-apps/releases).
-- **macOS:** build from source; each app's page says how.
+- **macOS:** download DMGs from the same [Releases](https://github.com/Vaib215/cute-apps/releases) page.
 
 ## Support
 

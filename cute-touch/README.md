@@ -10,6 +10,7 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/Vaib215/cute-apps/releases"><img src="https://img.shields.io/badge/Download-DMG-3B2F2C?logo=apple&logoColor=white" alt="Download DMG"></a>
   <img src="https://img.shields.io/badge/macOS-26%2B-3B2F2C?logo=apple&logoColor=white" alt="macOS 26 or newer">
   <a href="https://github.com/sponsors/Vaib215"><img src="https://img.shields.io/badge/Sponsor-%E2%9D%A4-ea4aaa?logo=githubsponsors&logoColor=white" alt="Sponsor"></a>
 </p>
@@ -57,6 +58,7 @@ drops, and the pattern of covers becomes a gesture. Nothing else is involved: no
 - **Dark** or native **Liquid Glass**.
 
 **Settings**
+- **Open at login** (on by default; it shows up under Login Items in System Settings).
 - Every timing (double-tap window, hold length, hover delays, and so on) is a slider.
 - Reset everything to defaults in one click.
 
@@ -79,17 +81,27 @@ drops, and the pattern of covers becomes a gesture. Nothing else is involved: no
 The pet and the panel are hidden from screenshots and screen sharing, so they never end up in your
 captures.
 
+## Install
+
+1. Download `CuteTouch-<version>.dmg` from [Releases](https://github.com/Vaib215/cute-apps/releases),
+   open it and drag **Cute Touch** to Applications.
+2. Open it. The app isn't notarized by Apple (that needs a paid developer account), so macOS says it
+   can't verify it: go to **System Settings → Privacy & Security** and click **Open Anyway** (once).
+3. A pet appears in the menu bar. Tap just right of your camera, or click the pet, to open the panel.
+   Its gear opens Settings.
+
 ## Build
 
 ```sh
 ./tools/make-signing-cert.sh   # once: a local signing identity, so permissions survive rebuilds
 ./build.sh                     # builds, installs to /Applications and starts at login
 ./build.sh app                 # only builds build/Cute Touch.app
+./build.sh release             # build/CuteTouch-<version>.dmg (ad-hoc signed, for Releases)
 ```
 
 Open **Cute Touch** from Launchpad or Spotlight to see the panel. Open Settings with the ⚙︎ in the panel,
 by right-clicking the pet, or with `"/Applications/Cute Touch.app/Contents/MacOS/CuteTouch" --settings`.
-To stop it starting at login, choose Quit, then delete `~/Library/LaunchAgents/com.vaib215.cutetouch.plist`.
+To stop it starting at login, switch off **Open at login** in Settings.
 
 The light sensor is read through a private part of IOKit (`IOHIDEventSystemClient`), the same way
 apps like Lunar read it. It needs no entitlement, but Apple could change it in a future macOS.

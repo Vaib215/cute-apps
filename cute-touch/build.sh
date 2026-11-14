@@ -1,13 +1,14 @@
 #!/bin/zsh
-# Build Cute Touch into /Applications (visible to Launchpad/Spotlight) and (re)start its LaunchAgent.
-#   ./build.sh            build, install, start at login
+# Build Cute Touch.
+#   ./build.sh            build, install to /Applications and (re)start it
 #   ./build.sh app        only build build/Cute Touch.app
+#   ./build.sh release    ad-hoc signed build/CuteTouch-<version>.dmg for GitHub Releases
 set -e
 cd "${0:A:h}"
 NAME="Cute Touch"
 ID=com.vaib215.cutetouch
+VERSION=1.0
 DEST="/Applications/$NAME.app"
-AGENT=~/Library/LaunchAgents/$ID.plist
 # A stable signing identity keeps macOS permissions (Screen Recording, Accessibility) across
 # rebuilds; ad-hoc signatures change every build. Create one with tools/make-signing-cert.sh.
 SIGN_ID="${CUTE_TOUCH_SIGN_ID:-Cute Touch Local Signing}"
@@ -29,7 +30,7 @@ cat > "$APP/Contents/Info.plist" <<PLIST
     <key>CFBundleExecutable</key><string>CuteTouch</string>
     <key>CFBundleIconFile</key><string>AppIcon</string>
     <key>CFBundlePackageType</key><string>APPL</string>
-    <key>CFBundleShortVersionString</key><string>1.0</string>
+    <key>CFBundleShortVersionString</key><string>$VERSION</string>
     <key>CFBundleVersion</key><string>1</string>
     <key>LSMinimumSystemVersion</key><string>26.0</string>
     <key>LSUIElement</key><true/>
@@ -49,8 +50,43 @@ if [[ ! -f build/AppIcon.icns ]]; then
 fi
 cp build/AppIcon.icns "$APP/Contents/Resources/AppIcon.icns"
 
+# "Open at login" agent (SMAppService.agent): starts in the background, restarts after a crash,
+# stays quit after Quit.
+mkdir -p "$APP/Contents/Library/LaunchAgents"
+cat > "$APP/Contents/Library/LaunchAgents/$ID.login.plist" <<PLIST
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key><string>$ID.login</string>
+    <key>BundleProgram</key><string>Contents/MacOS/CuteTouch</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>Contents/MacOS/CuteTouch</string>
+        <string>--background</string>
+    </array>
+    <key>RunAtLoad</key><true/>
+    <key>KeepAlive</key><dict><key>SuccessfulExit</key><false/></dict>
+</dict>
+</plist>
+PLIST
+
 swiftc -O *.swift -o "$APP/Contents/MacOS/CuteTouch"
-if security find-identity -p codesigning | grep -q "\"$SIGN_ID\""; then
+if [[ "$1" == release ]]; then
+    # Downloads can't use your local identity; ad-hoc it is (users approve it once in
+    # System Settings → Privacy & Security → Open Anyway).
+    codesign --force --sign - "$APP"
+    STAGE=build/dmg
+    rm -rf "$STAGE" && mkdir -p "$STAGE"
+    cp -R "$APP" "$STAGE/"
+    ln -s /Applications "$STAGE/Applications"
+    DMG="build/CuteTouch-$VERSION.dmg"
+    rm -f "$DMG"
+    hdiutil create -volname "$NAME" -srcfolder "$STAGE" -ov -format UDZO "$DMG" >/dev/null
+    rm -rf "$STAGE"
+    echo "$DMG"
+    exit 0
+elif security find-identity -p codesigning | grep -q "\"$SIGN_ID\""; then
     codesign --force --sign "$SIGN_ID" "$APP"
 else
     echo "note: no \"$SIGN_ID\" identity; signing ad-hoc (permissions reset on every rebuild)." >&2
@@ -58,28 +94,13 @@ else
 fi
 [[ "$1" == app ]] && exit 0
 
-launchctl bootout gui/$(id -u)/$ID 2>/dev/null || true
+# Older builds installed a hand-written LaunchAgent; the bundle carries its own now.
+if [[ -f ~/Library/LaunchAgents/$ID.plist ]]; then
+    launchctl bootout gui/$(id -u)/$ID 2>/dev/null || true
+    rm -f ~/Library/LaunchAgents/$ID.plist
+fi
 pkill -x CuteTouch 2>/dev/null || true
 rm -rf "$DEST"
 mv "$APP" "$DEST"
-
-if [[ ! -f "$AGENT" ]]; then
-    cat > "$AGENT" <<PLIST
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key><string>$ID</string>
-    <key>ProgramArguments</key>
-    <array>
-        <string>$DEST/Contents/MacOS/CuteTouch</string>
-        <string>--background</string>
-    </array>
-    <key>RunAtLoad</key><true/>
-    <!-- Restart after crashes, but stay quit after "Quit" (clean exit). -->
-    <key>KeepAlive</key><dict><key>SuccessfulExit</key><false/></dict>
-</dict>
-</plist>
-PLIST
-fi
-launchctl bootstrap gui/$(id -u) "$AGENT"
+# Restart through the login agent if it's registered, otherwise just launch in the background.
+launchctl kickstart -k gui/$(id -u)/$ID.login 2>/dev/null || open -a "$DEST" --args --background
